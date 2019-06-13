@@ -1,0 +1,11 @@
+*.pyc
+mediafiles/
+staticfiles/
+run
+logs
+.DS_Store
+*.pid
+.vscode
+.idea
+.idea/*
+__pycache__
