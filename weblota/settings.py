@@ -95,7 +95,12 @@ WSGI_APPLICATION = 'weblota.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config()
+    #'default': dj_database_url.config()
+    'default': {
+    'ENGINE': 'django.db.backends.sqlite3',  
+    'NAME': 'mydatabase',
+      
+   } 
  
 }
 
