@@ -3,8 +3,9 @@ from socceruser import views
 from django.conf.urls import url, include
 
 urlpatterns = [
-    url(r'^socceruser$', views.MyUserList.as_view()),
+    url(r'^socceruser/$', views.MyUserApiView.as_view()),
     url(r'^socceruser/(?P<pk>[0-9]+)/$', views.MyUserDetail.as_view()),
+
 
 ]
 

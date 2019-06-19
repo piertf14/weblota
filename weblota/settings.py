@@ -153,3 +153,5 @@ STATICFILES_DIRS = (
 USERNAME_REGEX = r'^(?=.{6,30}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9.-]+(?<![_.])$'
 
 AUTH_USER_MODEL = 'socceruser.MyUser'
+
+CORS_ORIGIN_ALLOW_ALL = True
