@@ -1,12 +1,7 @@
-from rest_framework.urlpatterns import format_suffix_patterns
 from socceruser import views
-from django.conf.urls import url, include
+from django.urls import path
 
 urlpatterns = [
-    url(r'^socceruser/$', views.MyUserApiView.as_view()),
-    url(r'^socceruser/(?P<pk>[0-9]+)/$', views.MyUserDetail.as_view()),
-
-
+    path('socceruser/', views.MyUserApiView.as_view()),
+    path('socceruser/<int:pk>/', views.MyUserApiView.as_view()),
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)
