@@ -1,6 +1,7 @@
 from django.db import models
 from local import constants as app_constants
 from local.utils import get_file_path
+from socceruser.utils import get_custom_slug
 
 
 class Local(models.Model):
@@ -14,7 +15,9 @@ class Local(models.Model):
         max_length=225
     )
     slug = models.CharField(
-        max_length=225
+        max_length=225,
+        null=True,
+        blank=True
     )
     description = models.TextField(
         null=True,
@@ -30,6 +33,13 @@ class Local(models.Model):
         auto_now_add=True
     )
 
+    def _get_slug(self):
+        return get_custom_slug(Local, self.name, instance=self)[:120]
+
+    def save(self, *args, **kwargs):
+        self.slug = self._get_slug()
+        super(Local, self).save(*args, **kwargs)
+
 
 class CourtSoccer(models.Model):
 
@@ -42,7 +52,9 @@ class CourtSoccer(models.Model):
         max_length=225
     )
     slug = models.CharField(
-        max_length=225
+        max_length=225,
+        null=True,
+        blank=True
     )
     description = models.TextField(
         null=True,
@@ -63,6 +75,13 @@ class CourtSoccer(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    def _get_slug(self):
+        return get_custom_slug(Local, self.name, instance=self)[:120]
+
+    def save(self, *args, **kwargs):
+        self.slug = self._get_slug()
+        super(CourtSoccer, self).save(*args, **kwargs)
 
 
 class Schedule(models.Model):
