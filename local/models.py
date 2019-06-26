@@ -40,6 +40,9 @@ class Local(models.Model):
         self.slug = self._get_slug()
         super(Local, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 class CourtSoccer(models.Model):
 
@@ -83,6 +86,9 @@ class CourtSoccer(models.Model):
         self.slug = self._get_slug()
         super(CourtSoccer, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 class Schedule(models.Model):
     court_soccer = models.ForeignKey(
@@ -117,3 +123,6 @@ class Gallery(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    def __str__(self):
+        return self.court_soccer.name

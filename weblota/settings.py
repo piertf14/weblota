@@ -143,8 +143,9 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = 'mediafiles'
 
-MEDIA_URL = '/media/'
+HEROKU_URL = 'http://weblota.heroku.app/'
 
+MEDIA_URL = HEROKU_URL
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
