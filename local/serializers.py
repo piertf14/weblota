@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from local.models import Local, CourtSoccer
+from local.models import Local, CourtSoccer, Gallery
 
 
 class LocalSerializer(serializers.ModelSerializer):
@@ -10,8 +10,14 @@ class LocalSerializer(serializers.ModelSerializer):
 
 
 class CourtSoccerSerializer(serializers.ModelSerializer):
-    # local = LocalSerializer()
 
     class Meta:
         model = CourtSoccer
         fields = ('id', 'local', 'slug', 'name', 'description', 'capacity', 'material_type',)
+
+
+class GallerySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Gallery
+        fields = ('id', 'court_soccer', 'photo', 'created_at')
