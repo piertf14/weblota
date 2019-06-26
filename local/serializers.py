@@ -16,8 +16,29 @@ class CourtSoccerSerializer(serializers.ModelSerializer):
         fields = ('id', 'local', 'slug', 'name', 'description', 'capacity', 'material_type',)
 
 
+class CourtSoccerListSerializer(serializers.ModelSerializer):
+
+    local = LocalSerializer()
+    gallery = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CourtSoccer
+        fields = '__all__'
+
+    def get_gallery(self, obj):
+        serializer = GallerySerializer(
+            obj.court_soccer_gallery.all(), many=True)
+        return serializer.data
+
+
 class GallerySerializer(serializers.ModelSerializer):
+    photo_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Gallery
-        fields = ('id', 'court_soccer', 'photo', 'created_at')
+        fields = '__all__'
+
+    def get_photo_url(self, obj):
+        if obj.photo:
+            return obj.photo.url
+        return None

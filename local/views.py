@@ -3,8 +3,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from local.models import Local
-from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer
+from local.models import Local, CourtSoccer
+from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer, CourtSoccerListSerializer
 from socceruser.utils import get_access_token
 
 
@@ -44,6 +44,18 @@ class CourtSoccerAPI(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk=None, format=None):
+        court_soccer = CourtSoccer.objects.all()
+        if pk:
+            try:
+                court_soccer = CourtSoccer.objects.get(pk=pk)
+                serializer = CourtSoccerListSerializer(court_soccer, many=False)
+                return Response(serializer.data)
+            except CourtSoccer.DoesNotExist as exe:
+                return Response({str(exe)}, status=400)
+        serializer = CourtSoccerListSerializer(court_soccer, many=True)
+        return Response(serializer.data)
 
 
 class GalleryAPI(APIView):

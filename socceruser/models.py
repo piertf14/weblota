@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class MyUser(AbstractUser):
 
     dni = models.CharField(
+        unique=True,
         max_length=8,
         null=True,
         blank=True
