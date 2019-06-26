@@ -143,7 +143,7 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = 'mediafiles'
 
-HEROKU_URL = 'http://weblota.heroku.app/'
+HEROKU_URL = 'http://weblota.heroku.app/media/'
 
 MEDIA_URL = HEROKU_URL
 
