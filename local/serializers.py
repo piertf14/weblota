@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from local.models import Local, CourtSoccer, Gallery
+from local.models import Local, CourtSoccer, Gallery, Schedule
 
 
 class LocalSerializer(serializers.ModelSerializer):
@@ -42,3 +42,19 @@ class GallerySerializer(serializers.ModelSerializer):
         if obj.photo:
             return obj.photo.url
         return None
+
+
+class ScheduleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Schedule
+        fields = ('id', 'court-soccer', 'start_time', 'end_time', 'price', 'duration',)
+
+
+class ScheduleListSerializer(serializers.ModelSerializer):
+
+    cancha =  CourtSoccerSerializer()
+
+    class Meta:
+        model = Schedule
+        fields = '__all__'
