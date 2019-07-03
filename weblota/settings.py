@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'local',
     'reserve',
     'order',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,7 @@ DATABASES = {
  
 }
 
+
 '''
 DATABASES = {
     'default': {
@@ -112,6 +114,7 @@ DATABASES = {
     }
 }
 '''
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -148,17 +151,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = 'staticfiles'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+
+
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = 'mediafiles'
 
-MEDIA_URL = '/media/'
+S3_URL = 'https://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+MEDIA_URL = S3_URL
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
 
 USERNAME_REGEX = r'^(?=.{6,30}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9.-]+(?<![_.])$'
 

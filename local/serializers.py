@@ -32,7 +32,6 @@ class CourtSoccerListSerializer(serializers.ModelSerializer):
 
 
 class GallerySerializer(serializers.ModelSerializer):
-    photo_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Gallery
