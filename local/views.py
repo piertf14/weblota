@@ -23,7 +23,6 @@ class LocalAPI(APIView):
 
     def get(self, request, pk=None, format=None):
         user = get_access_token(request).user
-        locales = user.user_local.all()
         if pk:
             try:
                 local = Local.objects.get(pk=pk, user=user)
@@ -31,6 +30,7 @@ class LocalAPI(APIView):
                 return Response(serializer.data)
             except Local.DoesNotExist as exe:
                 return Response({str(exe)}, status=400)
+        locales = user.user_local.all()
         serializer = LocalSerializer(locales, many=True)
         return Response(serializer.data)
 
@@ -46,7 +46,7 @@ class CourtSoccerAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk=None, format=None):
-        court_soccer = CourtSoccer.objects.all()
+        court_soccer = CourtSoccer.objects.all().order_by('-total_reserves')
         if pk:
             try:
                 court_soccer = CourtSoccer.objects.get(pk=pk)
