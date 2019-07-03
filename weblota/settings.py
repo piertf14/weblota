@@ -69,7 +69,6 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-       # 'rest_framework.permissions.AllowAny',
     )
 }
 
@@ -95,12 +94,22 @@ WSGI_APPLICATION = 'weblota.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': dj_database_url.config()
  
 }
-
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'weblotadb',
+        'USER': 'postgres',
+        'PASSWORD': '123456789',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

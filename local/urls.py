@@ -7,4 +7,6 @@ urlpatterns = [
     path('court-soccer/', views.CourtSoccerAPI.as_view()),
     path('court-soccer/<int:pk>/', views.CourtSoccerAPI.as_view()),
     path('gallery/', views.GalleryAPI.as_view()),
+    path('schedule/', views.ScheduleAPI.as_view()),
+    path('schedule/<int:pk>/', views.ScheduleAPI.as_view()),
 ]
