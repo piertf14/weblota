@@ -72,6 +72,8 @@ class CourtSoccer(models.Model):
         choices=app_constants.MATERIAL_TYPES,
         default=app_constants.SYNTHETIC_GRASS
     )
+    start_time = models.TimeField(null=True)
+    end_time = models.TimeField(null=True)
     total_reserves = models.PositiveIntegerField(
         default=0
     )

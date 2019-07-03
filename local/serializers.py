@@ -13,7 +13,7 @@ class CourtSoccerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CourtSoccer
-        fields = ('id', 'local', 'slug', 'name', 'description', 'capacity', 'material_type',)
+        fields = ('id', 'local', 'slug', 'name', 'description', 'capacity', 'material_type', 'start_time', 'end_time',)
 
 
 class CourtSoccerListSerializer(serializers.ModelSerializer):
@@ -49,13 +49,3 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = ('id', 'court_soccer', 'start_time', 'end_time', 'price', 'duration',)
-
-
-class ScheduleListSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Schedule
-        fields = '__all__'
-
-
-   # court_soccer =  CourtSoccerSerializer()

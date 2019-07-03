@@ -58,6 +58,23 @@ class CourtSoccerAPI(APIView):
         serializer = CourtSoccerListSerializer(court_soccer, many=True)
         return Response(serializer.data)
 
+    def put(self, request, pk, format=None):
+        try:
+            court_soccer = CourtSoccer.objects.get(pk=pk)
+            data = request.data
+            if data['start_time'] is not None and data['end_time'] is not None:
+                court_soccer.start_time = data['start_time']
+                court_soccer.end_time = data['end_time']
+                court_soccer.save()
+                serializer = CourtSoccerSerializer(court_soccer, many=False)
+                return Response(serializer.data)
+            else:
+                return Response({"start_time": 'es requerido', "end_time": 'es requerido'}, status=400)
+        except CourtSoccer.DoesNotExist as exe:
+            return Response({str(exe)}, status=400)
+        except Exception as ex:
+            return Response({str(ex)}, status=400)
+
 
 class GalleryAPI(APIView):
     permission_classes = [IsAuthenticated]
@@ -91,37 +108,3 @@ class ScheduleAPI(APIView):
                 return Response({str(exe)}, status=400)
         serializer = ScheduleSerializer(schedule, many=True)
         return Response(serializer.data)    
-
-
-
-
-
-
-'''
-    def post(self, request, format=None):
-        serializer = ScheduleSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def get(self, request, pk=None, format=None):
-        if pk:
-            horario = self.get_object(pk)
-            serializers = ScheduleSerializer(horario, many=False)
-        else:
-            horarios = Schedule.objects.all()
-            serializers = ScheduleSerializer(horarios, many=True)
-        return Response(serializers.data)
-
-    def get_object(self, pk):
-        try:
-            return Schedule.objects.get(pk=pk)
-        except Schedule.DoesNotExist:
-            return None
-'''
-
-
-
-
