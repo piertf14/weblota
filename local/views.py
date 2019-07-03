@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from local.models import Local, CourtSoccer, Schedule
-from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer, CourtSoccerListSerializer, ScheduleSerializer, ScheduleListSerializer
+from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer, CourtSoccerListSerializer, ScheduleSerializer
+#, ScheduleListSerializer
 from socceruser.utils import get_access_token
 
 
@@ -80,13 +81,47 @@ class ScheduleAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk=None, format=None):
-        horarios = Schedule.objects.all()
+        schedule = Schedule.objects.all()
         if pk:
             try:
-                horarios = Schedule.objects.get(pk=pk)
-                serializer = ScheduleListSerializer(horarios, many=False)
+                schedule = Schedule.objects.get(pk=pk)
+                serializer = ScheduleSerializer(schedule, many=False)
                 return Response(serializer.data)
             except Schedule.DoesNotExist as exe:
                 return Response({str(exe)}, status=400)
-        serializer = ScheduleListSerializer(horarios, many=True)
-        return Response(serializer.data)
+        serializer = ScheduleSerializer(schedule, many=True)
+        return Response(serializer.data)    
+
+
+
+
+
+
+'''
+    def post(self, request, format=None):
+        serializer = ScheduleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk=None, format=None):
+        if pk:
+            horario = self.get_object(pk)
+            serializers = ScheduleSerializer(horario, many=False)
+        else:
+            horarios = Schedule.objects.all()
+            serializers = ScheduleSerializer(horarios, many=True)
+        return Response(serializers.data)
+
+    def get_object(self, pk):
+        try:
+            return Schedule.objects.get(pk=pk)
+        except Schedule.DoesNotExist:
+            return None
+'''
+
+
+
+

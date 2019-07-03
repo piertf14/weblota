@@ -48,13 +48,14 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Schedule
-        fields = ('id', 'court-soccer', 'start_time', 'end_time', 'price', 'duration',)
+        fields = ('id', 'court_soccer', 'start_time', 'end_time', 'price', 'duration',)
 
 
 class ScheduleListSerializer(serializers.ModelSerializer):
 
-    cancha =  CourtSoccerSerializer()
-
     class Meta:
         model = Schedule
         fields = '__all__'
+
+
+   # court_soccer =  CourtSoccerSerializer()
