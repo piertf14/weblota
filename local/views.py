@@ -1,11 +1,12 @@
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.views import APIView
 
 from local.models import Local, CourtSoccer, Schedule
-from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer, CourtSoccerListSerializer, ScheduleSerializer
-#, ScheduleListSerializer
+from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer, \
+    CourtSoccerListSerializer, ScheduleSerializer
 from socceruser.utils import get_access_token
 
 
@@ -36,8 +37,24 @@ class LocalAPI(APIView):
         return Response(serializer.data)
 
 
-class CourtSoccerAPI(APIView):
-    permission_classes = [IsAuthenticated]
+class ReadOnly(BasePermission):
+
+    def has_permission(self, request, view):
+        try:
+            user = get_access_token(request).user
+            if user:
+                return True
+            elif request.method == 'GET':
+                return True
+        except:
+            return False
+
+
+class CourtSoccerAPI(ListAPIView):
+    permission_classes = (ReadOnly, )
+    serializer_class = CourtSoccerListSerializer
+    model = CourtSoccer
+    paginate_by = 100
 
     def post(self, request, format=None):
         serializer = CourtSoccerSerializer(data=request.data)
@@ -46,17 +63,38 @@ class CourtSoccerAPI(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, pk=None, format=None):
-        court_soccer = CourtSoccer.objects.all().order_by('-total_reserves')
-        if pk:
-            try:
-                court_soccer = CourtSoccer.objects.get(pk=pk)
-                serializer = CourtSoccerListSerializer(court_soccer, many=False)
-                return Response(serializer.data)
-            except CourtSoccer.DoesNotExist as exe:
-                return Response({str(exe)}, status=400)
-        serializer = CourtSoccerListSerializer(court_soccer, many=True)
-        return Response(serializer.data)
+    def filter(self, queryset):
+        duration = self.request.GET.get('duration')
+        ubigeo = self.request.GET.get('ubigeo')
+        material_type = self.request.get('material_type')
+        capacity = self.request.get('capacity')
+        if duration:
+            course_soccer_id = list(Schedule.objects.filter(
+                duration=duration).values_list('court_soccer_id', flat=True))
+            queryset = queryset.filter(id__in=course_soccer_id)
+
+        if ubigeo:
+            queryset = queryset.filter(local__district_ubigeo__startswith=ubigeo)
+
+        if material_type:
+            queryset = queryset.filter(material_type=material_type)
+
+        if material_type:
+            queryset = queryset.filter(material_type=material_type)
+
+        if capacity:
+            queryset = queryset.filter(material_type=capacity)
+
+        return queryset
+
+    def get_queryset(self):
+        queryset = self.model.objects.all().order_by('-total_reserves')
+        if self.kwargs.get('pk', None):
+            court_soccer = CourtSoccer.objects.filter(pk=self.kwargs['pk'])
+            return court_soccer
+
+        queryset = self.filter(queryset)
+        return queryset
 
     def put(self, request, pk, format=None):
         try:
