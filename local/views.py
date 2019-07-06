@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.views import APIView
+from oauth2_provider.models import AccessToken
 
 from local.models import Local, CourtSoccer, Schedule
 from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer, \
@@ -41,13 +42,12 @@ class ReadOnly(BasePermission):
 
     def has_permission(self, request, view):
         try:
-            user = get_access_token(request).user
-            if user:
-                return True
-            elif request.method == 'GET':
-                return True
+            get_access_token(request)
+            return True
         except:
-            return False
+            if request.method == 'GET':
+                return True
+        return False
 
 
 class CourtSoccerAPI(ListAPIView):
@@ -66,8 +66,8 @@ class CourtSoccerAPI(ListAPIView):
     def filter(self, queryset):
         duration = self.request.GET.get('duration')
         ubigeo = self.request.GET.get('ubigeo')
-        material_type = self.request.get('material_type')
-        capacity = self.request.get('capacity')
+        material_type = self.request.GET.get('material_type')
+        capacity = self.request.GET.get('capacity')
         if duration:
             course_soccer_id = list(Schedule.objects.filter(
                 duration=duration).values_list('court_soccer_id', flat=True))
