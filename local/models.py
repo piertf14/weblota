@@ -111,6 +111,10 @@ class Schedule(models.Model):
         auto_now_add=True
     )
 
+    def __str__(self):
+        return '%s - %s-%s' % (
+            self.court_soccer.name, self.start_time, self.end_time)
+
 
 class Gallery(models.Model):
 
