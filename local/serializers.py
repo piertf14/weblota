@@ -48,3 +48,30 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = ('id', 'court_soccer', 'start_time', 'end_time', 'price', 'duration',)
+
+
+class CourtSoccerLocalSerializer(serializers.ModelSerializer):
+
+    gallery = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CourtSoccer
+        fields = '__all__'
+
+    def get_gallery(self, obj):
+        serializer = GallerySerializer(
+            obj.court_soccer_gallery.all(), many=True)
+        return serializer.data
+
+
+class LocalListSerializer(serializers.ModelSerializer):
+    court_soccer = serializers.SerializerMethodField()
+
+    def get_court_soccer(self, obj):
+        court_soccer = obj.local_court_soccer.all()
+        serializer = CourtSoccerLocalSerializer(court_soccer, many=True)
+        return serializer.data
+
+    class Meta:
+        model = Local
+        fields = '__all__'
