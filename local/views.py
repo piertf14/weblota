@@ -1,18 +1,18 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from oauth2_provider.models import AccessToken
 
 from local.models import Local, CourtSoccer, Schedule
 from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer, \
-    CourtSoccerListSerializer, ScheduleSerializer
+    CourtSoccerListSerializer, ScheduleSerializer, LocalListSerializer
+from local.utils import ReadOnly
 from socceruser.utils import get_access_token
 
 
 class LocalAPI(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (ReadOnly, )
 
     def post(self, request, format=None):
         request_data = request.data
@@ -29,25 +29,13 @@ class LocalAPI(APIView):
         if pk:
             try:
                 local = Local.objects.get(pk=pk, user=user)
-                serializer = LocalSerializer(local, many=False)
+                serializer = LocalListSerializer(local, many=False)
                 return Response(serializer.data)
             except Local.DoesNotExist as exe:
                 return Response({str(exe)}, status=400)
         locales = user.user_local.all()
-        serializer = LocalSerializer(locales, many=True)
+        serializer = LocalListSerializer(locales, many=True)
         return Response(serializer.data)
-
-
-class ReadOnly(BasePermission):
-
-    def has_permission(self, request, view):
-        try:
-            get_access_token(request)
-            return True
-        except:
-            if request.method == 'GET':
-                return True
-        return False
 
 
 class CourtSoccerAPI(ListAPIView):
