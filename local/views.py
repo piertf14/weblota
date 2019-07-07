@@ -126,14 +126,18 @@ class GalleryAPI(APIView):
 
 
 class ScheduleAPI(APIView):
-    permission_classes = [IsAuthenticated]
-
+    permission_classes = (ReadOnly, )
     def post(self, request, format=None):
-        serializer = ScheduleSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer_array = []
+        for data_row in request.data:
+            serializer = ScheduleSerializer(data=data_row)
+            if serializer.is_valid():
+                serializer.save()
+                serializer_array.append(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+        return Response(serializer_array, status=status.HTTP_201_CREATED)
+            
 
     def get(self, request, pk=None, format=None):
         schedule = Schedule.objects.all()
