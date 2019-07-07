@@ -114,7 +114,7 @@ class GalleryAPI(APIView):
 
 
 class ScheduleAPI(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (ReadOnly, )
 
     def post(self, request, format=None):
         serializer = ScheduleSerializer(data=request.data)
