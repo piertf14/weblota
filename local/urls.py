@@ -8,5 +8,5 @@ urlpatterns = [
     path('court-soccer/<int:pk>/', views.CourtSoccerAPI.as_view()),
     path('gallery/', views.GalleryAPI.as_view()),
     path('schedule/', views.ScheduleAPI.as_view()),
-    path('schedule/<int:pk>/', views.ScheduleAPI.as_view()),
+    path('schedule/<int:court_soccer>/', views.ScheduleAPI.as_view()),
 ]
