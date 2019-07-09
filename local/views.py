@@ -118,7 +118,14 @@ class ScheduleAPI(APIView):
 
     def post(self, request, format=None):
         serializer_array = []
-        for data_row in request.data:
+        data = request.data
+
+        for i, data_row in enumerate(data):
+            for j, x in enumerate(data):
+                if i != j and data_row['start_time'] == x['start_time']:
+                    return Response({"start_time": 'horario no disponible'}, status=400)
+                if i != j and data_row['end_time'] == x['end_time']:
+                    return Response({"end_time": 'horario no disponible'}, status=400)
             serializer = ScheduleSerializer(data=data_row)
             if serializer.is_valid():
                 serializer.save()
@@ -127,14 +134,16 @@ class ScheduleAPI(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
         return Response(serializer_array, status=status.HTTP_201_CREATED)
             
-
-    def get(self, request, pk=None, format=None):
+    def get(self, request, court_soccer=None, format=None):
         schedule = Schedule.objects.all()
-        if pk:
+        serializer_array = []
+        if court_soccer:
             try:
-                schedule = Schedule.objects.get(pk=pk)
-                serializer = ScheduleSerializer(schedule, many=False)
-                return Response(serializer.data)
+                schedule = Schedule.objects.filter(court_soccer_id=court_soccer)
+                for i in schedule:
+                    serializer = ScheduleSerializer(i, many=False)
+                    serializer_array.append(serializer.data)
+                return Response(serializer_array)
             except Schedule.DoesNotExist as exe:
                 return Response({str(exe)}, status=400)
         serializer = ScheduleSerializer(schedule, many=True)
