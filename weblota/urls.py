@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/', include('socceruser.urls')),
     path('api/', include('local.urls')),
     path('api/', include('reserve.urls')),
+    path('api/', include('order.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
