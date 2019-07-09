@@ -21,9 +21,20 @@ class OrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         process = CulqiProcess()
         status, charge = process.charge(validated_data)
-        validated_data.update({
+        data = {
             'status': (reserve_constants.STATUS_PAID
-                       if status else reserve_constants.STATUS_FAILED)
-        })
+                       if status else reserve_constants.STATUS_FAILED),
+            'payment_type': validated_data['payment_type'],
+            'reserve': validated_data['reserve'],
+            'total': validated_data['total'],
+
+        }
+        validated_data = data
         reserve = Order.objects.create(**validated_data)
         return reserve
+
+
+class OrderListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'

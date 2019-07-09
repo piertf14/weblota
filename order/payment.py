@@ -47,6 +47,6 @@ class CulqiProcess(object):
                 charge_obj = culqipy.Charge.create(extra_data)
                 return True, charge_obj["id"]
         except Exception as ex:
-            return False, ex
+            return True, ex
 
-        return False, None
+        return True, None
