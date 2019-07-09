@@ -23,3 +23,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    def save(self, *args, **kwargs):
+        super(Order, self).save(*args, **kwargs)
+        self.reserve.status = reserve_constants.STATUS_PAID
