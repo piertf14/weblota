@@ -119,8 +119,22 @@ class ScheduleAPI(APIView):
     def post(self, request, format=None):
         serializer_array = []
         data = request.data
+        schedule = Schedule.objects.all()
 
         for i, data_row in enumerate(data):
+
+            for schedule_row in schedule:
+                print(schedule_row.start_time)
+                print(data_row['start_time'])
+                print('-----------------------')
+                print(schedule_row.court_soccer_id)
+                print(data_row['court_soccer'])
+                print('°°°°°°°°°°°°°°°°°°°°°°°°')
+                if schedule_row.court_soccer_id == data_row['court_soccer'] and schedule_row.start_time == data_row['start_time']:
+                    return Response({"start_time": 'horario no disponible'}, status=400)
+                if schedule_row.court_soccer_id == data_row['court_soccer'] and schedule_row.end_time == data_row['end_time']:
+                    return Response({"end_time": 'horario no disponible'}, status=400)
+
             for j, x in enumerate(data):
                 if i != j and data_row['start_time'] == x['start_time']:
                     return Response({"start_time": 'horario no disponible'}, status=400)
