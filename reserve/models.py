@@ -26,6 +26,6 @@ class Reserve(models.Model):
     def is_reserved(cls, day, schedule):
         return cls.objects.filter(
             reserve_day=day,
-            schedule=schedule,
+            schedule_id=schedule,
             status=app_constants.STATUS_PAID
         ).exists()

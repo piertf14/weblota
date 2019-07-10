@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from local.models import Local, CourtSoccer, Gallery, Schedule
+from reserve import constants as reserve_constants
 
 
 class LocalSerializer(serializers.ModelSerializer):
@@ -48,6 +49,18 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = ('id', 'court_soccer', 'start_time', 'end_time', 'price', 'duration',)
+
+
+class ScheduleListSerializer(serializers.ModelSerializer):
+    is_reserved = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Schedule
+        fields = '__all__'
+
+    def get_is_reserved(self, obj):
+        return obj.schedule_reserve.filter(
+            status=reserve_constants.STATUS_PAID).exists()
 
 
 class CourtSoccerLocalSerializer(serializers.ModelSerializer):

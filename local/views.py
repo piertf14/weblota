@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from local.models import Local, CourtSoccer, Schedule
 from local.serializers import LocalSerializer, CourtSoccerSerializer, GallerySerializer, \
-    CourtSoccerListSerializer, ScheduleSerializer, LocalListSerializer
+    CourtSoccerListSerializer, ScheduleSerializer, LocalListSerializer, ScheduleListSerializer
 from local.utils import ReadOnly
 from socceruser.utils import get_access_token
 
@@ -155,10 +155,10 @@ class ScheduleAPI(APIView):
             try:
                 schedule = Schedule.objects.filter(court_soccer_id=court_soccer)
                 for i in schedule:
-                    serializer = ScheduleSerializer(i, many=False)
+                    serializer = ScheduleListSerializer(i, many=False)
                     serializer_array.append(serializer.data)
                 return Response(serializer_array)
             except Schedule.DoesNotExist as exe:
                 return Response({str(exe)}, status=400)
-        serializer = ScheduleSerializer(schedule, many=True)
+        serializer = ScheduleListSerializer(schedule, many=True)
         return Response(serializer.data)    

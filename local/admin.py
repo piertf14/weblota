@@ -19,4 +19,5 @@ class CourtSoccerAdmin(admin.ModelAdmin):
 
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
+    raw_id_fields = ('court_soccer', )
     list_display = ('id', 'court_soccer', 'start_time', 'end_time', 'price', 'duration', 'created_at')
